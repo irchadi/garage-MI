@@ -1,0 +1,199 @@
+*{
+    margin: 0;
+    padding: 0;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+  
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap; /* Permettre le retour à la ligne */
+    justify-content: center; /* Centrer horizontalement */
+    align-items: center; /* Centrer verticalement */
+}
+
+.coordonnees, .horaires {
+    background-color: #f2f2f2; /* Couleur de fond */
+    padding: 20px; /* Espacement interne */
+    width: 300px; /* Largeur */
+    border-radius: 10px; /* Coins arrondis */
+    border: 2px solid #ccc; /* Bordure */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre */
+    margin: 10px; /* Marge autour des blocs */
+}
+
+.horaires {
+    background-color: #333; /* Couleur de fond pour les horaires */
+    color: #fff; /* Couleur du texte */
+    border-color: #000; /* Couleur de la bordure */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Ombre */
+}
+
+.coordonnees h2, .horaires h2 {
+    margin-top: 0; /* Supprimer la marge supérieure */
+}
+
+.coordonnees p, .horaires p {
+    margin: 10px 0; /* Espacement entre les paragraphes */
+    font-size: 14px; /* Taille de la police */
+}
+
+@media screen and (max-width: 568px) {
+    .container {
+        flex-direction: column; /* Affichage en colonne */
+        align-items: center; /* Centrer horizontalement */
+    }
+}
+
+/*
+Rechercher
+*/
+
+.search-container {
+    background-color: #d4d4d4; /* Couleur de fond blanc cassé */
+    padding: 20px; /* Espacement interne */
+    border: 2px solid #e6e6e6; /* Bordure */
+    border-radius: 10px; /* Coins arrondis */
+    max-width: 760px; /* Largeur maximale du conteneur */
+    margin: 0 auto; /* Centrer horizontalement */
+}
+
+.search-container h3 {
+    margin-top: 0; /* Supprimer la marge supérieure */
+}
+
+.form-container {
+    display: flex; /* Utiliser flexbox */
+    flex-wrap: wrap; /* Permettre le retour à la ligne si nécessaire */
+}
+
+.form-group {
+    flex: 1; /* Les éléments prennent une part égale de l'espace */
+    margin-right: 10px; /* Espacement entre les éléments */
+}
+
+.form-group:last-child {
+    margin-right: 0; /* Ne pas d'espacement à droite pour le dernier élément */
+}
+
+.form-group label {
+    display: block; /* Afficher les labels sur une ligne séparée */
+    margin-bottom: 5px; /* Espacement sous les labels */
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"] {
+    width: 100%; /* Les champs de saisie occupent toute la largeur disponible */
+    padding: 8px; /* Espacement interne */
+    border: 1px solid #ccc; /* Bordure grise */
+    border-radius: 5px; /* Coins arrondis */
+    box-sizing: border-box; /* Boîte de modèle pour inclure la bordure et le rembourrage dans la largeur */
+}
+
+input[type="submit"] {
+    background-color: #a9a9a9; /* Couleur de fond du bouton */
+    color: white; /* Couleur du texte du bouton */
+    border: none; /* Supprimer la bordure du bouton */
+    cursor: pointer; /* Curseur de la souris sur le bouton */
+    padding: 8px 16px; /* Espacement interne */
+    border-radius: 5px; /* Coins arrondis */
+    box-sizing: border-box; /* Boîte de modèle pour inclure la bordure et le rembourrage dans la largeur */
+}
+
+/*
+COMMENT
+*/
+.container {
+    text-align: center;
+    padding: 20px;
+    overflow-x: auto; /* Permet le défilement horizontal */
+}
+
+.title {
+    margin-top: 50px; /* Ajout d'une marge en haut pour centrer le titre */
+    margin-bottom: 20px;
+}
+
+#temoignages-container {
+    display: flex;
+    flex-direction: row; /* Défilement horizontal */
+    justify-content: center;
+    height: auto;
+    padding: 10px; /* Ajout d'un espace autour des témoignages */
+    white-space: nowrap; /* Empêche le saut de ligne des témoignages */
+    animation: slideLeft 60s linear infinite; /* Animation de défilement */
+}
+
+.comment {
+    max-width: 400px; /* Largeur maximale pour chaque commentaire */
+    margin-right: 10px; /* Espacement entre les témoignages */
+    height: 100px;
+    width: 400px;
+    padding: 10px;
+    border: 1px solid #ccc; /* Bordure grise */
+    border-radius: 5px;
+    background-color: #f9f9f9; /* Arrière-plan gris clair */
+    transition: transform 1s ease-in-out; /* Transition de mouvement */
+}
+
+.comment:hover {
+    transform: scale(1.05); /* Effet de zoom au survol */
+}
+
+.comment h3 {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.comment p {
+    font-size: 14px;
+    margin: 0;
+}
+
+/* Animation de défilement de droite à gauche */
+@keyframes slideLeft {
+    0% {
+        transform: translateX(5%);
+    }
+    100% {
+        transform: translateX(-5%);
+    }
+}
+
+/*Description*/
+
+.intro {
+    background-color: #f8f9fa; /* Un arrière-plan clair pour contraster avec le reste du site */
+    padding: 2rem 0; /* Espacement autour du texte */
+}
+
+.intro .container {
+    max-width: 1200px; /* Largeur maximale pour le contenu */
+    margin: auto; /* Centrer dans la page */
+    padding: 0 20px; /* Espacement à gauche et à droite */
+}
+
+.intro h2 {
+    margin-bottom: 1rem; /* Espacement sous le titre */
+    color: #007bff; /* Couleur principale pour le titre, à ajuster selon votre palette */
+}
+
+.intro p {
+    line-height: 1.6; /* Hauteur de ligne pour améliorer la lisibilité */
+    margin-bottom: 1rem; /* Espacement entre les paragraphes */
+}
