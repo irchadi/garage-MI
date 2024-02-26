@@ -133,3 +133,15 @@ $(document).ready(function() {
         });
     });
 });
+document.getElementById('formTemoignage').addEventListener('submit', function(e) {
+    e.preventDefault(); // Empêche la soumission traditionnelle du formulaire
+
+    var formData = new FormData(this);
+
+    // Ici, ajoutez votre appel AJAX pour soumettre le formulaire
+    // Pour cet exemple, nous allons simplement afficher un message de confirmation
+    document.getElementById('messageConfirmation').textContent = 'Merci pour votre témoignage !';
+
+    // Réinitialiser le formulaire après la soumission
+    this.reset();
+});

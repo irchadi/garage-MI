@@ -79,7 +79,7 @@ $services = json_decode(file_get_contents('services.json'), true);
 </header>
 
     <main>
-        <div>
+        <div class="logo-container">
             <img src="assets\Garage V Parrot -logos\Garage V Parrot -logos_black.png" alt="Logo garage V. Parrot" style="width: 50%;">
         </div>
         <div class="container">
@@ -89,11 +89,12 @@ $services = json_decode(file_get_contents('services.json'), true);
                 <p>+123 456 789</p>
             </div>
             <div class="horaires">
-            <h2>Heures d'ouverture</h2>
-            <p>Lundi - Vendredi : <?php echo $horaires['lundi_vendredi']; ?></p>
-            <p>Samedi : <?php echo $horaires['samedi']; ?></p>
+                <h2>Heures d'ouverture</h2>
+                <p>Lundi - Vendredi : <?php echo $horaires['lundi_vendredi']; ?></p>
+                <p>Samedi : <?php echo $horaires['samedi']; ?></p>
+            </div>
         </div>
-        </div>
+        <div>
             <section id="testimonial" class="container">
             <div class="container">
         <h2 class="title">Témoignages</h2>
@@ -125,8 +126,9 @@ if ($temoignages) {
 $bdd = null;
 ?>
     </div>
+    <div class="formulaire-temoignage">
     <h2>Laisser un témoignage</h2>
-    <form action="traitement_temoignage.php" method="post">
+    <form action="traitement_temoignage.php" method="post" id="formTemoignage">
         <div>
             <label for="nom_client">Votre nom :</label>
             <input type="text" id="nom_client" name="nom_client" required>
@@ -149,6 +151,7 @@ $bdd = null;
     }
     ?>
     </form>
+    </div>
     </main>
    
 
