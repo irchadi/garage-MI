@@ -2,6 +2,7 @@ login.php
 connectdb.php
 comcompte.php
 moncompteemploye.php
+traitement_connexion.php
 /vendor/
 /node_modules/
 .env
