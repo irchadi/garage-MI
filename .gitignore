@@ -2,3 +2,6 @@ login.php
 connectdb.php
 comcompte.php
 moncompteemploye.php
+/vendor/
+/node_modules/
+.env
