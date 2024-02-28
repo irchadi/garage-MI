@@ -1,5 +1,8 @@
 ## Réalisation du site web pour le Garage V.Parrot - Sujet ECF
 
+### Documentation technique
+[I'm an inline-style link](https://www.google.com)
+
 ### Résumé projet
 Administrateur : 
 - Modifier les informations directement à partir de son espace d'administration.
