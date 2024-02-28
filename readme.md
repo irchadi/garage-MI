@@ -1,7 +1,6 @@
 ## Réalisation du site web pour le Garage V.Parrot - Sujet ECF
 
-### Résumé projet 
-
+### Résumé projet
 Administrateur : 
 - Modifier les informations directement à partir de son espace d'administration.
 - gérer les informations sur le site web.
@@ -12,9 +11,9 @@ Administrateur :
 Utilisateurs :
 - Un espace utilisateur.
 - Se connecter grâce à un formulaire de de connexion (adresse e-mail et un mot de passe sécurisé).
--  Pouvoir ajouter, depuis son espace, de nouvelles voitures sur le site.
--  Ajouter des témoignages clients directement depuis leur espace dédié.
--  Modérer les avis.
+- Pouvoir ajouter, depuis son espace, de nouvelles voitures sur le site.
+- Ajouter des témoignages clients directement depuis leur espace dédié.
+- Modérer les avis.
 
 Visiteurs :
 - Pouvoir consulter les horaires d'ouverture du garage directement sur le site web, ce qui leur permettra de planifier leur passage sur place.
@@ -24,3 +23,4 @@ Visiteurs :
 - Laisser un témoignage composé d’un nom, d’un commentaire, ainsi que d’une note.
 - Voir les commentaires approuvés.
 
+### Moyens utilisés
