@@ -1,8 +1,8 @@
 ## Réalisation du site web pour le Garage V.Parrot - Sujet ECF
 
 ### Documentation technique
-[Documentation Projet & Produit](https://drive.google.com/file/d/1o0VvY3jIFeQvIS6X6T_BDGIFG9_9pRp2/view?usp=sharing)
-[MOCKUPS](https://drive.google.com/file/d/1F7xroSVOzkR-U-n9qSu_LoXysaAibEtu/view?usp=sharing)
+1. [Documentation Projet & Produit](https://drive.google.com/file/d/1o0VvY3jIFeQvIS6X6T_BDGIFG9_9pRp2/view?usp=sharing)
+2. [MOCKUPS](https://drive.google.com/file/d/1F7xroSVOzkR-U-n9qSu_LoXysaAibEtu/view?usp=sharing)
 
 ### Résumé projet
 Administrateur : 
