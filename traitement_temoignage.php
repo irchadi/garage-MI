@@ -20,12 +20,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ':approuve' => false // Par défaut, le témoignage n'est pas approuvé
     ]);
 
-  // Redirection vers la page précédente
-  if (isset($_SERVER['HTTP_REFERER'])) {
-}
+    // Stocker le message de notification dans une variable de session
+    $_SESSION['notification'] = "Votre témoignage a été soumis avec succès!";
 
-    // Rediriger l'utilisateur vers la page d'accueil
-    header('Location: ' . htmlspecialchars($_SERVER['PHP_SELF']));
-    exit; // Assurez-vous d'utiliser exit après la redirection pour éviter l'exécution du reste du script
+    // Redirection vers la page précédente ou une page spécifique
+    if (isset($_SERVER['HTTP_REFERER']) && parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) == $_SERVER['SERVER_NAME']) {
+        header('Location: ' . htmlspecialchars($_SERVER['HTTP_REFERER']));
+    } else {
+        header('Location: index.php');
+    }
+    exit; // Utiliser exit après la redirection
 }
 ?>
+

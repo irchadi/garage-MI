@@ -6,7 +6,6 @@ require_once('connectdb.php');
 $horaires = json_decode(file_get_contents('horaires.json'), true);
 $services = json_decode(file_get_contents('services.json'), true);
 
-
 ?>
 
 <!DOCTYPE html>
@@ -144,10 +143,9 @@ $bdd = null;
         <button type="submit">Envoyer</button>
         <?php
     // Vérifie si le témoignage a été soumis avec succès
-    if (isset($_SESSION['message'])) {
-        echo "<p>Merci pour votre témoignage !</p>";
-        // Efface le message de session pour qu'il ne s'affiche pas à nouveau après un rechargement de la page
-        unset($_SESSION['message']);
+    if (isset($_SESSION['notification'])) {
+        echo '<p>' . htmlspecialchars($_SESSION['notification']) . '</p>';
+        unset($_SESSION['notification']); // Supprimer le message après l'affichage
     }
     ?>
     </form>
