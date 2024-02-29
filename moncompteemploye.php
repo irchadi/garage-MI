@@ -32,8 +32,14 @@ function changerStatutTemoignage($bdd, $id, $statut) {
 // Vérifie si les paramètres de changement de statut sont présents
 if (isset($_GET['id']) && isset($_GET['statut'])) {
     changerStatutTemoignage($bdd, $_GET['id'], $_GET['statut']);
+    
     // Redirection pour éviter le rechargement du formulaire sur refresh
-    header("Location: moncompteemploye.php");
+    if (isset($_SERVER['HTTP_REFERER']) && parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) == $_SERVER['SERVER_NAME']) {
+        header("Location: " . htmlspecialchars($_SERVER['HTTP_REFERER']));
+    } else {
+        // Rediriger vers une page par défaut si la page précédente n'est pas disponible ou n'est pas du même domaine
+        header("Location: moncompte.php");
+    }
     exit;
 }
 ?>
@@ -195,8 +201,9 @@ if (isset($_POST['supprimer_service'])) {
 </div>
 
 </div>
-    <h2>Témoignage client</h2>
-    <form action="traitement_temoignage.php" method="post">
+<div class="formulaire-temoignage">
+    <h2>Laisser un témoignage client</h2>
+    <form action="traitement_temoignage.php" method="post" id="formTemoignage">
         <div>
             <label for="nom_client">Votre nom :</label>
             <input type="text" id="nom_client" name="nom_client" required>
@@ -212,12 +219,13 @@ if (isset($_POST['supprimer_service'])) {
         <button type="submit">Envoyer</button>
         <?php
     // Vérifie si le témoignage a été soumis avec succès
-    if (isset($_SESSION['message'])) {
-        echo "<p>Merci pour votre témoignage !</p>";
-        // Efface le message de session pour qu'il ne s'affiche pas à nouveau après un rechargement de la page
-        unset($_SESSION['message']);
+    if (isset($_SESSION['notification'])) {
+        echo '<p>' . htmlspecialchars($_SESSION['notification']) . '</p>';
+        unset($_SESSION['notification']); // Supprimer le message après l'affichage
     }
     ?>
+    </form>
+    </div>
 
 <div class="container">
     <h2>Témoignages</h2>

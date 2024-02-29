@@ -34,8 +34,14 @@ function changerStatutTemoignage($bdd, $id, $statut) {
 // Vérifie si les paramètres de changement de statut sont présents
 if (isset($_GET['id']) && isset($_GET['statut'])) {
     changerStatutTemoignage($bdd, $_GET['id'], $_GET['statut']);
+    
     // Redirection pour éviter le rechargement du formulaire sur refresh
-    header("Location: moncompte.php");
+    if (isset($_SERVER['HTTP_REFERER']) && parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) == $_SERVER['SERVER_NAME']) {
+        header("Location: " . htmlspecialchars($_SERVER['HTTP_REFERER']));
+    } else {
+        // Rediriger vers une page par défaut si la page précédente n'est pas disponible ou n'est pas du même domaine
+        header("Location: moncompte.php");
+    }
     exit;
 }
 ?>
