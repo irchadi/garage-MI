@@ -58,6 +58,13 @@ CREATE TABLE contacts (
     annonce_associee VARCHAR(255)
 );
 
+CREATE TABLE services (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(255) NOT NULL,
+    description TEXT,
+    image VARCHAR(255)
+);
+
 -- Insertion d'un compte administrateur
 INSERT INTO utilisateurs (nom, prenom, email, mot_de_passe, type) 
 VALUES ('Vincent', 'Parrot', 'vincent.parrot@outlook.fr', 'mot_de_passe_employe', 'employe');
@@ -81,6 +88,15 @@ VALUES ('NomClient', 'Excellent service!', 5, NOW(), true);
 -- Pour enregistrer les informations de contact des visiteurs 
 INSERT INTO contacts (nom, prenom, email, numero_telephone, message, date_soumission, annonce_associee) 
 VALUES ('NomContact', 'PrenomContact', 'email_contact@example.com', '123456789', 'Message du visiteur', NOW(), 'AnnonceAssociee');
+
+-- insertion services --
+INSERT INTO services (nom, description, image) VALUES
+('Réparation moteur', 'Service complet de réparation et maintenance de moteur pour toutes marques de véhicules.', 'assets/img/reparation-moteur.jpg'),
+('Changement de pneus', 'Offre de changement de pneus avec une large gamme de marques et de modèles pour améliorer la performance de conduite.', 'assets/img/changement-pneus.jpg'),
+('Vidange d\'huile', 'Service de vidange d\'huile rapide et efficace pour maintenir votre véhicule en bon état de marche.', 'assets/img/vidange-huile.jpg'),
+('Contrôle technique', 'Préparation et accompagnement pour le contrôle technique de votre véhicule afin d\'assurer sa conformité.', 'assets/img/controle-technique.jpg'),
+('Nettoyage intérieur et extérieur', 'Services de nettoyage complets pour l\'intérieur et l\'extérieur de votre véhicule, utilisant des produits écologiques.', 'assets/img/nettoyage-voiture.jpg');
+
 
 INSERT INTO vehicules_occasion (marque, modele, prix, annee_mise_en_circulation, kilometrage, description, caracteristiques_techniques, equipements_options, image_principale) 
 VALUES 

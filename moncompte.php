@@ -170,7 +170,7 @@ $services = json_decode(file_get_contents('services.json'), true);
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="nous.html">Qui sommes-nous ?</a>
+                        <a class="nav-link" href="nous.php">Qui sommes-nous ?</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="moncompte.php">Administrateur</a>
@@ -346,6 +346,9 @@ $services = json_decode(file_get_contents('services.json'), true);
 <div class="container">
         <a href="logout.php">Se déconnecter</a>
 </div>
+<footer class="bg-light p-3 fixed-bottom">
+    <p class="text-center">Garage V. Parrot est votre partenaire de confiance pour l'entretien, la réparation, et la vente de véhicules d'occasion à Toulouse.</p>
+</footer>
 </main>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

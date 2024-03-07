@@ -1,3 +1,12 @@
+<?php
+// Inclure le fichier de connexion
+require_once('connectdb.php');
+
+// Récupérer les noms des services depuis la base de données
+$requete = $bdd->query("SELECT nom FROM services");
+$services = $requete->fetchAll(PDO::FETCH_ASSOC);
+?>
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -40,9 +49,9 @@
                             Nos services
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Réparation</a>
-                            <a class="dropdown-item" href="#">Contrôle technique</a>
-                            <a class="dropdown-item" href="#">Entretien</a>
+                            <?php foreach ($services as $service): ?>
+                            <a class="dropdown-item" href="#"><?php echo htmlspecialchars($service['nom']); ?></a>
+                            <?php endforeach; ?>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -54,7 +63,7 @@
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="nous.html">Qui sommes-nous ?</a>
+                        <a class="nav-link" href="nous.php">Qui sommes-nous ?</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="moncompteemploye.php">Employé</a>

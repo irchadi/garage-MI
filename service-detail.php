@@ -1,16 +1,10 @@
 <?php
-session_start(); // Démarre la session
-// Inclure le fichier de connexion
-require_once('connectdb.php');
-
-$horaires = json_decode(file_get_contents('horaires.json'), true);
-$services = json_decode(file_get_contents('services.json'), true);
+require_once 'connectdb.php'; // Assurez-vous que ce fichier établit la connexion à votre base de données
 
 // Récupérer les noms des services depuis la base de données
 $requete = $bdd->query("SELECT id, nom FROM services");
 $services = $requete->fetchAll(PDO::FETCH_ASSOC);
 ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -80,90 +74,35 @@ $services = $requete->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </nav>
 </header>
-<main>
-    <div class="logo-container">
-        <img src="assets\Garage V Parrot -logos\Garage V Parrot -logos_black.png" alt="Logo garage V. Parrot" style="width: 50%;">
-    </div>
-    <div class="container">
-        <div class="coordonnees">
-            <h2>Garage V. Parrot</h2>
-            <p>123 Rue de la République, Toulouse</p>
-            <p>+123 456 789</p>
-        </div>
-        <div class="horaires">
-            <h2>Heures d'ouverture</h2>
-            <p>Lundi - Vendredi : <?php echo $horaires['lundi_vendredi']; ?></p>
-            <p>Samedi : <?php echo $horaires['samedi']; ?></p>
-        </div>
-    </div>
-    <div>
-        <section id="testimonial" class="container">
-        <div class="container">
-    <h2 class="title">Témoignages</h2>
-    <div id="temoignages-container">
+<main class="container">
     <?php
-require_once('connectdb.php');
-// Requête pour récupérer uniquement les témoignages approuvés
-$requeteTemoignages = $bdd->query('SELECT * FROM temoignages WHERE approuve = 1 ORDER BY id ASC');
-$temoignages = $requeteTemoignages->fetchAll(PDO::FETCH_ASSOC);
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $stmt = $bdd->prepare("SELECT * FROM services WHERE id = ?");
+        $stmt->execute([$id]);
+        $service = $stmt->fetch(PDO::FETCH_ASSOC);
 
-// Affichage des témoignages approuvés
-if ($temoignages) {
-    foreach ($temoignages as $temoignage) {
-        echo "<div class='comment'>";
-        echo "<h3>" . htmlspecialchars($temoignage['nom_client']);
-        // Étant donné que la requête SQL assure déjà que les témoignages sont approuvés, cette vérification est redondante
-        if ($temoignage['approuve']) {
-            echo " <img src='assets/Garage V Parrot -logos/icone-approuve.png' alt='Approuvé' style='width: 20px; height: 20px;' />";
-            echo "</h3>";
-            echo "<p>" . htmlspecialchars($temoignage['commentaire']) . "</p>";
+        if ($service) {
+            echo "<h1>" . htmlspecialchars($service['nom']) . "</h1>";
+            echo "<p>" . nl2br(htmlspecialchars($service['description'])) . "</p>";
+            echo "<img src='" . htmlspecialchars($service['image']) . "' alt='" . htmlspecialchars($service['nom']) . "' style='max-width: 100%; height: auto;'/>";
+        } else {
+            echo "Service non trouvé.";
         }
-        echo "</div>";
-    }
-} else {
-    echo "Aucun témoignage trouvé.";
-}
-
-// Fermeture de la connexion à la base de données
-$bdd = null;
-?>
-    </div>
-    <div class="formulaire-temoignage">
-    <h2>Laisser un témoignage</h2>
-    <form action="traitement_temoignage.php" method="post" id="formTemoignage">
-        <div>
-            <label for="nom_client">Votre nom :</label>
-            <input type="text" id="nom_client" name="nom_client" required>
-        </div>
-        <div>
-            <label for="commentaire">Votre commentaire :</label>
-            <textarea id="commentaire" name="commentaire" rows="4" required></textarea>
-        </div>
-        <div>
-            <label for="note">Votre note :</label>
-            <input type="number" id="note" name="note" min="1" max="5" required>
-        </div>
-        <button type="submit">Envoyer</button>
-        <?php
-    // Vérifie si le témoignage a été soumis avec succès
-    if (isset($_SESSION['notification'])) {
-        echo '<p>' . htmlspecialchars($_SESSION['notification']) . '</p>';
-        unset($_SESSION['notification']); // Supprimer le message après l'affichage
+    } else {
+        echo "Aucun identifiant de service fourni.";
     }
     ?>
-    </form>
-    </div>
-    </main>
-   
+</main>
 
-    <footer class="bg-light p-3 fixed-bottom">
+<footer class="bg-light p-3 fixed-bottom">
     <p class="text-center">Garage V. Parrot est votre partenaire de confiance pour l'entretien, la réparation, et la vente de véhicules d'occasion à Toulouse.</p>
 </footer>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
 </body>
 </html>
+
 

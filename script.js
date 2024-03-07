@@ -145,3 +145,34 @@ document.getElementById('formTemoignage').addEventListener('submit', function(e)
     // Réinitialiser le formulaire après la soumission
     this.reset();
 });
+document.querySelectorAll('.service-item').forEach(item => {
+  item.addEventListener('click', function(e) {
+    e.preventDefault();
+
+    // Récupérer les données
+    const serviceName = this.getAttribute('data-name');
+    const serviceDescription = this.getAttribute('data-description');
+    const serviceImage = this.getAttribute('data-image');
+
+    // Remplir la modal avec les données
+    document.getElementById('serviceName').textContent = serviceName;
+    document.getElementById('serviceDescription').textContent = serviceDescription;
+    document.getElementById('serviceImage').src = serviceImage;
+    document.getElementById('serviceImage').alt = 'Image de ' + serviceName;
+
+    // Afficher la modal
+    $('#serviceDetailModal').modal('show');
+  });
+});
+// Script pour charger les détails du service via AJAX et les afficher dans la modal
+$(document).ready(function() {
+    $('.service-link').click(function(e) {
+        e.preventDefault();
+        var slug = $(this).data('slug');
+        // Requête AJAX pour récupérer les détails du service
+        $.get('fetch-service-details.php', { slug: slug }, function(data) {
+            $('#serviceModal .modal-body').html(data);
+            $('#serviceModal').modal('show');
+        });
+    });
+});

@@ -145,7 +145,7 @@ if (isset($_POST['supprimer_service'])) {
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="nous.html">Qui sommes-nous ?</a>
+                        <a class="nav-link" href="nous.php">Qui sommes-nous ?</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="moncompteemploye.php">Employé</a>
