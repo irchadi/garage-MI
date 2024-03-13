@@ -44,9 +44,8 @@ if (isset($_GET['id']) && isset($_GET['statut'])) {
     }
     exit;
 }
-?>
 
-<?php
+
 // Lecture des heures d'ouverture actuelles
 $horaires = json_decode(file_get_contents('horaires.json'), true);
 
@@ -112,6 +111,31 @@ if (isset($_POST['supprimer_service'])) {
 
 // Recharger les services après modification
 $services = json_decode(file_get_contents('services.json'), true);
+
+// Traitement de l'ajout de service
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter_service'])) {
+    $nom = $_POST['nom'];
+    $description = $_POST['description'];
+    // Code pour télécharger l'image et obtenir son chemin
+
+    // Insérer les données dans la base de données
+    $sql = "INSERT INTO services (nom, description, image) VALUES (:nom, :description, :image)";
+    $stmt = $bdd->prepare($sql);
+    $stmt->execute(array(
+        ':nom' => $nom,
+        ':description' => $description,
+        ':image' => $image // Assurez-vous de remplacer cette valeur par le chemin de l'image téléchargée
+    ));
+}
+
+// Traitement de la suppression de service
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['supprimer_service'])) {
+    $id = $_POST['id'];
+    // Supprimer le service correspondant à l'ID donné de la base de données
+    $sql = "DELETE FROM services WHERE id = :id";
+    $stmt = $bdd->prepare($sql);
+    $stmt->execute(array(':id' => $id));
+}
 ?>
 
 <!DOCTYPE html>
@@ -255,6 +279,43 @@ $services = json_decode(file_get_contents('services.json'), true);
     </form>
 </div>
 
+<div class="container">
+        <h2>Ajouter un service</h2>
+        <form action="" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="nom">Nom du service:</label>
+                <input type="text" class="form-control" id="nom" name="nom" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea class="form-control" id="description" name="description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="image">Image:</label>
+                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+            </div>
+            <button type="submit" class="btn btn-primary" name="ajouter_service">Ajouter le service</button>
+        </form>
+        <hr>
+        <?php
+        // Récupérer les services depuis la base de données
+        $sql = "SELECT id, nom FROM services";
+        $stmt = $bdd->query($sql);
+        if ($stmt->rowCount() > 0) {
+            // Afficher les services dans un formulaire
+            echo '<form action="" method="post">';
+            while ($row = $stmt->fetch()) {
+                echo '<div class="form-group">';
+                echo '<label>' . htmlspecialchars($row['nom']) . '</label>';
+                echo '<button type="submit" class="btn btn-danger" name="supprimer_service" value="' . $row['id'] . '">Supprimer</button>';
+                echo '</div>';
+            }
+            echo '</form>';
+        } else {
+            echo '<p>Aucun service trouvé.</p>';
+        }
+        ?>
+    </div>
 
 <div class="container">
     <h2>Contacts</h2>
@@ -346,9 +407,12 @@ $services = json_decode(file_get_contents('services.json'), true);
 <div class="container">
         <a href="logout.php">Se déconnecter</a>
 </div>
-<footer class="bg-light p-3 fixed-bottom">
+<div>
+<footer class="bg-light p-3 bottom">
     <p class="text-center">Garage V. Parrot est votre partenaire de confiance pour l'entretien, la réparation, et la vente de véhicules d'occasion à Toulouse.</p>
 </footer>
+</div>
+
 </main>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

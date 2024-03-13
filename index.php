@@ -6,6 +6,10 @@ require_once('connectdb.php');
 $horaires = json_decode(file_get_contents('horaires.json'), true);
 $services = json_decode(file_get_contents('services.json'), true);
 
+// Requête pour récupérer uniquement les témoignages approuvés
+$requeteTemoignages = $bdd->query('SELECT * FROM temoignages WHERE approuve = 1 ORDER BY id ASC');
+$temoignages = $requeteTemoignages->fetchAll(PDO::FETCH_ASSOC);
+
 // Récupérer les noms des services depuis la base de données
 $requete = $bdd->query("SELECT id, nom FROM services");
 $services = $requete->fetchAll(PDO::FETCH_ASSOC);
@@ -102,13 +106,8 @@ $services = $requete->fetchAll(PDO::FETCH_ASSOC);
     <h2 class="title">Témoignages</h2>
     <div id="temoignages-container">
     <?php
-require_once('connectdb.php');
-// Requête pour récupérer uniquement les témoignages approuvés
-$requeteTemoignages = $bdd->query('SELECT * FROM temoignages WHERE approuve = 1 ORDER BY id ASC');
-$temoignages = $requeteTemoignages->fetchAll(PDO::FETCH_ASSOC);
-
-// Affichage des témoignages approuvés
-if ($temoignages) {
+    // Affichage des témoignages approuvés
+    if ($temoignages) {
     foreach ($temoignages as $temoignage) {
         echo "<div class='comment'>";
         echo "<h3>" . htmlspecialchars($temoignage['nom_client']);
@@ -123,12 +122,10 @@ if ($temoignages) {
 } else {
     echo "Aucun témoignage trouvé.";
 }
-
-// Fermeture de la connexion à la base de données
-$bdd = null;
 ?>
-    </div>
-    <div class="formulaire-temoignage">
+</div>
+
+<div class="formulaire-temoignage">
     <h2>Laisser un témoignage</h2>
     <form action="traitement_temoignage.php" method="post" id="formTemoignage">
         <div>
@@ -152,13 +149,11 @@ $bdd = null;
     }
     ?>
     </form>
-    </div>
-    </main>
-   
-
-    <footer class="bg-light p-3 fixed-bottom">
+</div>
+<footer class="bg-light p-3 fixed-bottom">
     <p class="text-center">Garage V. Parrot est votre partenaire de confiance pour l'entretien, la réparation, et la vente de véhicules d'occasion à Toulouse.</p>
 </footer>
+    </main>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

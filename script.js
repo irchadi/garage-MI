@@ -176,3 +176,13 @@ $(document).ready(function() {
         });
     });
 });
+
+// Script page service
+document.addEventListener('DOMContentLoaded', (event) => {
+    const serviceImage = document.querySelector('img');
+    if (serviceImage) {
+        serviceImage.addEventListener('click', () => {
+            alert('Vous avez cliqué sur l\'image du service.');
+        });
+    }
+});

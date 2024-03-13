@@ -264,3 +264,37 @@ h2 {
     line-height: 1.6; /* Hauteur de ligne pour améliorer la lisibilité */
     margin-bottom: 1rem; /* Espacement entre les paragraphes */
 }
+
+/*
+service
+*/
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin: auto;
+    max-width: 800px; /* Vous pouvez ajuster ou supprimer cette limite selon vos besoins */
+}
+
+h1 {
+    color: #333;
+    font-size: 2em;
+    margin: 20px 0;
+}
+
+p {
+    color: #666;
+    line-height: 1.5;
+    text-align: justify; /* Améliore la lisibilité du texte */
+    margin-bottom: 20px;
+}
+
+img {
+    max-width: 100%; /* S'assure que l'image ne dépasse pas la largeur de l'écran */
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
