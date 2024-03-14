@@ -407,11 +407,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['supprimer_service'])) 
 <div class="container">
         <a href="logout.php">Se déconnecter</a>
 </div>
-<div>
-<footer class="bg-light p-3 bottom">
+
+<footer class="bg-light p-3">
     <p class="text-center">Garage V. Parrot est votre partenaire de confiance pour l'entretien, la réparation, et la vente de véhicules d'occasion à Toulouse.</p>
 </footer>
-</div>
+
 
 </main>
 

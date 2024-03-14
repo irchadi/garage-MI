@@ -101,56 +101,55 @@ $services = $requete->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </div>
     <div>
-        <section id="testimonial" class="container">
-        <div class="container">
-    <h2 class="title">Témoignages</h2>
-    <div id="temoignages-container">
-    <?php
-    // Affichage des témoignages approuvés
-    if ($temoignages) {
-    foreach ($temoignages as $temoignage) {
-        echo "<div class='comment'>";
-        echo "<h3>" . htmlspecialchars($temoignage['nom_client']);
-        // Étant donné que la requête SQL assure déjà que les témoignages sont approuvés, cette vérification est redondante
-        if ($temoignage['approuve']) {
-            echo " <img src='assets/Garage V Parrot -logos/icone-approuve.png' alt='Approuvé' style='width: 20px; height: 20px;' />";
-            echo "</h3>";
-            echo "<p>" . htmlspecialchars($temoignage['commentaire']) . "</p>";
-        }
-        echo "</div>";
-    }
-} else {
-    echo "Aucun témoignage trouvé.";
-}
-?>
-</div>
-
-<div class="formulaire-temoignage">
-    <h2>Laisser un témoignage</h2>
-    <form action="traitement_temoignage.php" method="post" id="formTemoignage">
-        <div>
-            <label for="nom_client">Votre nom :</label>
-            <input type="text" id="nom_client" name="nom_client" required>
+        <h2 class="title">Témoignages</h2>
+        <div id="temoignages-container">
+            <?php
+            // Affichage des témoignages approuvés
+            if ($temoignages) {
+                foreach ($temoignages as $temoignage) {
+                    echo "<div class='comment'>";
+                    echo "<h3>" . htmlspecialchars($temoignage['nom_client']);
+                    // Étant donné que la requête SQL assure déjà que les témoignages sont approuvés, cette vérification est redondante
+                    if ($temoignage['approuve']) {
+                        echo " <img src='assets/Garage V Parrot -logos/icone-approuve.png' alt='Approuvé' style='width: 20px; height: 20px;' />";
+                        echo "</h3>";
+                        echo "<p>" . htmlspecialchars($temoignage['commentaire']) . "</p>";
+                    }
+                    echo "</div>";
+                }
+            } else {
+                echo "Aucun témoignage trouvé.";
+            }
+            ?>
         </div>
-        <div>
-            <label for="commentaire">Votre commentaire :</label>
-            <textarea id="commentaire" name="commentaire" rows="4" required></textarea>
+    </div>
+    <div class="formulaire-temoignage mt-3">
+    <h2 class="text-center">Laisser un témoignage</h2>
+    <form action="traitement_temoignage.php" method="post" id="formTemoignage" class="d-flex flex-column align-items-center">
+        <div class="mb-3">
+            <label for="nom_client" class="form-label">Votre nom :</label>
+            <input type="text" id="nom_client" name="nom_client" class="form-control" required>
         </div>
-        <div>
-            <label for="note">Votre note :</label>
-            <input type="number" id="note" name="note" min="1" max="5" required>
+        <div class="mb-3">
+            <label for="commentaire" class="form-label">Votre commentaire :</label>
+            <textarea id="commentaire" name="commentaire" rows="4" class="form-control" required></textarea>
         </div>
-        <button type="submit">Envoyer</button>
+        <div class="mb-3">
+            <label for="note" class="form-label">Votre note (sur 5) :</label>
+            <input type="number" id="note" name="note" min="1" max="5" class="form-control" required placeholder="Note sur 5">
+        </div>
+        <button type="submit" class="btn btn-primary">Envoyer</button>
         <?php
-    // Vérifie si le témoignage a été soumis avec succès
-    if (isset($_SESSION['notification'])) {
-        echo '<p>' . htmlspecialchars($_SESSION['notification']) . '</p>';
-        unset($_SESSION['notification']); // Supprimer le message après l'affichage
-    }
-    ?>
+        // Vérifie si le témoignage a été soumis avec succès
+        if (isset($_SESSION['notification'])) {
+            echo '<p>' . htmlspecialchars($_SESSION['notification']) . '</p>';
+            unset($_SESSION['notification']); // Supprimer le message après l'affichage
+        }
+        ?>
     </form>
 </div>
-<footer class="bg-light p-3 fixed-bottom">
+
+<footer class="bg-light p-3">
     <p class="text-center">Garage V. Parrot est votre partenaire de confiance pour l'entretien, la réparation, et la vente de véhicules d'occasion à Toulouse.</p>
 </footer>
     </main>
