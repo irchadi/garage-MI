@@ -7,5 +7,6 @@ traitement_connexion.php
 /vendor/
 /node_modules/
 .env
+
 ###< Ignore internal file ###
 /SQL/
