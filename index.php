@@ -4,7 +4,6 @@ session_start(); // Démarre la session
 require_once('connectdb.php');
 
 $horaires = json_decode(file_get_contents('horaires.json'), true);
-$services = json_decode(file_get_contents('services.json'), true);
 
 // Requête pour récupérer uniquement les témoignages approuvés
 $requeteTemoignages = $bdd->query('SELECT * FROM temoignages WHERE approuve = 1 ORDER BY id ASC');
