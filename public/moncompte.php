@@ -1,53 +1,12 @@
 <?php
 // Inclure le fichier de connexion
-require_once('connectdb.php');
+session_start();
 
-session_start(); // Démarrer la session pour accéder aux variables de session
-
-// Vérifier si l'utilisateur est connecté
-if (!isset($_SESSION['utilisateur'])) {
-    // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
-    header("Location: login.php");
-    exit();
-}
-
-// Vérifier si l'utilisateur est de type "admin"
-if ($_SESSION['type'] !== 'admin') {
-    // Rediriger vers une page d'erreur ou une autre page appropriée si l'utilisateur n'est pas autorisé
-    header("Location: erreur.php");
-    exit();
-}
-
-// Si l'utilisateur est connecté et est de type "admin", continuer l'exécution du code...
-
-// Fonction pour changer le statut d'approbation d'un témoignage
-function changerStatutTemoignage($bdd, $id, $statut) {
-    try {
-        $requete = $bdd->prepare("UPDATE temoignages SET approuve = :statut WHERE id = :id");
-        $requete->execute([':statut' => $statut, ':id' => $id]);
-        echo "<p>Le statut du témoignage a été mis à jour.</p>";
-    } catch (Exception $e) {
-        die('Erreur lors de la mise à jour du témoignage : ' . $e->getMessage());
-    }
-}
-
-// Vérifie si les paramètres de changement de statut sont présents
-if (isset($_GET['id']) && isset($_GET['statut'])) {
-    changerStatutTemoignage($bdd, $_GET['id'], $_GET['statut']);
-    
-    // Redirection pour éviter le rechargement du formulaire sur refresh
-    if (isset($_SERVER['HTTP_REFERER']) && parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) == $_SERVER['SERVER_NAME']) {
-        header("Location: " . htmlspecialchars($_SERVER['HTTP_REFERER']));
-    } else {
-        // Rediriger vers une page par défaut si la page précédente n'est pas disponible ou n'est pas du même domaine
-        header("Location: moncompte.php");
-    }
-    exit;
-}
+require_once __DIR__ . '/../config/connectdb.php';
 
 
 // Lecture des heures d'ouverture actuelles
-$horaires = json_decode(file_get_contents('horaires.json'), true);
+$horaires = json_decode(file_get_contents(__DIR__ . '/../resources/horaires.json'), true);
 
 // Traitement du formulaire
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_horaires'])) {
@@ -74,8 +33,6 @@ if (isset($_POST['ajouter_service'])) {
     }
 }
 
-// Chargement des services existants
-$services = json_decode(file_get_contents('services.json'), true);
 
 // Traitement de la suppression d'un service
 if (isset($_POST['supprimer_service'])) {
@@ -87,8 +44,6 @@ if (isset($_POST['supprimer_service'])) {
         echo "Service supprimé avec succès.";
     }
 }
-// Chargement des services
-$services = json_decode(file_get_contents('services.json'), true);
 
 // Ajouter un nouveau service
 if (isset($_POST['ajouter_service']) && !empty($_POST['nouveau_service'])) {
@@ -109,8 +64,6 @@ if (isset($_POST['supprimer_service'])) {
     file_put_contents('services.json', json_encode($services, JSON_PRETTY_PRINT));
 }
 
-// Recharger les services après modification
-$services = json_decode(file_get_contents('services.json'), true);
 
 // Traitement de l'ajout de service
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter_service'])) {

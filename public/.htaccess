@@ -1,0 +1,41 @@
+RewriteEngine On
+# Assurez-vous que mod_rewrite est activé sur votre serveur.
+
+# Redirige toutes les requêtes non statiques vers index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
+
+#Compression DEFLATE
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/plain
+  AddOutputFilterByType DEFLATE text/html
+  AddOutputFilterByType DEFLATE text/xml
+  AddOutputFilterByType DEFLATE text/css
+  AddOutputFilterByType DEFLATE application/xml
+  AddOutputFilterByType DEFLATE application/xhtml+xml
+  AddOutputFilterByType DEFLATE application/rss+xml
+  AddOutputFilterByType DEFLATE application/javascript
+  AddOutputFilterByType DEFLATE application/x-javascript
+</IfModule>
+
+#Gestion du Cache
+<IfModule mod_headers.c>
+  Header unset ETag
+  Header unset Last-Modified
+  Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+  Header set Cache-Control "no-cache, no-store, must-revalidate, max-age=0"
+  Header set Pragma "no-cache"
+</IfModule>
+
+#sécurité
+# Empêcher l'accès aux fichiers cachés
+<FilesMatch "^\.">
+  Order Allow,Deny
+  Deny from all
+</FilesMatch>
+
+# X-Frame-Options pour éviter le clickjacking
+<IfModule mod_headers.c>
+  Header always append X-Frame-Options SAMEORIGIN
+</IfModule>

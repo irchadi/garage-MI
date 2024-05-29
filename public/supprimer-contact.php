@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'connectdb.php';
+require_once __DIR__ . '/../config/connectdb.php';
 
 // Vérifiez si l'utilisateur est connecté et est de type "admin"
 if (!isset($_SESSION['utilisateur']) || $_SESSION['type'] !== 'admin') {

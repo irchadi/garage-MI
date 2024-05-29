@@ -1,5 +1,5 @@
 <?php
-require_once 'connectdb.php'; // Assurez-vous que ce fichier établit la connexion à votre base de données
+require_once __DIR__ . '/../config/connectdb.php'; // Assurez que ce fichier établit la connexion à votre base de données
 
 // Récupérer les noms des services depuis la base de données
 $requete = $bdd->query("SELECT id, nom FROM services");

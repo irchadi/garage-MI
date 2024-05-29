@@ -1,5 +1,5 @@
 <?php
-require_once('connectdb.php'); // Assurez-vous que ce fichier contient vos informations de connexion à la base de données
+require_once __DIR__ . '/../config/connectdb.php'; // Assurez-vous que ce fichier contient vos informations de connexion à la base de données
 
 // Vérification si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_FILES['image_principale'])) {

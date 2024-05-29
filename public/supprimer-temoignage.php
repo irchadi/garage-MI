@@ -1,6 +1,6 @@
 <?php
 session_start(); // Démarrer la session au début du script
-require_once('connectdb.php'); // Inclure la connexion à la base de données
+require_once __DIR__ . '/../config/connectdb.php'; // Inclure la connexion à la base de données
 
 if (isset($_GET['id'])) {
     $id = $_GET['id'];

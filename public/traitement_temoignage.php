@@ -1,6 +1,6 @@
 <?php
 session_start(); // Démarre la session
-require_once('connectdb.php'); // Inclure le fichier de connexion à la base de données
+require_once __DIR__ . '/../config/connectdb.php'; // Inclure le fichier de connexion à la base de données
 
 // Vérifier si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

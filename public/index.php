@@ -1,18 +1,50 @@
 <?php
-session_start(); // Démarre la session
-// Inclure le fichier de connexion
-require_once('connectdb.php');
+session_start();
 
-$horaires = json_decode(file_get_contents('horaires.json'), true);
+require_once __DIR__ . '/../config/connectdb.php';
+
+// Déterminer la requête de l'URL
+$request = trim($_SERVER['REQUEST_URI'], '/');
+
+switch ($request) {
+    case '':
+    case 'home':
+        // Logique pour afficher la page d'accueil
+        break;
+    case 'employe':
+        // Assurez-vous que l'utilisateur est connecté en tant qu'employé
+        if (isset($_SESSION['utilisateur']) && $_SESSION['type'] === 'employe') {
+            require __DIR__ . '/../app/views/moncompteemploye.php';
+        } else {
+            header('Location: loginemploye.php');
+            exit();
+        }
+        break;
+    case 'admin':
+        // Assurez-vous que l'utilisateur est connecté en tant qu'administrateur
+        if (isset($_SESSION['utilisateur']) && $_SESSION['type'] === 'admin') {
+            require __DIR__ . '/../app/views/moncompte.php';
+        } else {
+            header('Location: login.php');
+            exit();
+        }
+        break;
+    default:
+        // Page non trouvée ou autre logique ici
+        break;
+}
+
+$horaires = json_decode(file_get_contents(__DIR__ . '/../resources/horaires.json'), true);
 
 // Requête pour récupérer uniquement les témoignages approuvés
-$requeteTemoignages = $bdd->query('SELECT * FROM temoignages WHERE approuve = 1 ORDER BY id ASC');
+$requeteTemoignages = $bdd->query('SELECT * FROM temoignages WHERE approuve = 1 ORDER BY id DESC');
 $temoignages = $requeteTemoignages->fetchAll(PDO::FETCH_ASSOC);
 
 // Récupérer les noms des services depuis la base de données
-$requete = $bdd->query("SELECT id, nom FROM services");
-$services = $requete->fetchAll(PDO::FETCH_ASSOC);
+$requeteServices = $bdd->query("SELECT id, nom FROM services");
+$services = $requeteServices->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -20,9 +52,8 @@ $services = $requete->fetchAll(PDO::FETCH_ASSOC);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Garage V. Parrot</title>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets\style.css">
+    <link rel="stylesheet" href="assets/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(document).ready(function() {

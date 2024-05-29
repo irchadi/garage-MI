@@ -1,7 +1,7 @@
 <?php
 session_start(); // Démarrage ou reprise de la session
 
-require_once 'connectdb.php'; // Inclusion de la connexion à la base de données
+require_once __DIR__ . '/../config/connectdb.php'; // Inclusion de la connexion à la base de données
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Récupération sécurisée des données du formulaire

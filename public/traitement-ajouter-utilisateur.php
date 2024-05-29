@@ -1,5 +1,5 @@
 <?php
-require_once('connectdb.php'); // Inclut votre script de connexion à la base de données
+require_once __DIR__ . '/../config/connectdb.php'; // Inclut votre script de connexion à la base de données
 
 // Vérifie si le formulaire a été soumis
 if ($_SERVER["REQUEST_METHOD"] == "POST") {

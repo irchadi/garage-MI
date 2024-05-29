@@ -1,23 +1,9 @@
 <?php
 session_start();
 // Inclure le fichier de connexion
-require_once('connectdb.php');
-// Fonction pour changer le statut d'approbation d'un témoignage
+require_once __DIR__ . '/../config/connectdb.php';
 
 
-// Vérifier si l'utilisateur est connecté
-if (!isset($_SESSION['utilisateur'])) {
-    // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
-    header("Location: loginemploye.php");
-    exit();
-}
-
-// Vérifier si l'utilisateur est de type "employe"
-if ($_SESSION['type'] !== 'employe') {
-    // Rediriger vers une page d'erreur ou une autre page appropriée si l'utilisateur n'est pas autorisé
-    header("Location: erreur.php");
-    exit();
-}
 
 function changerStatutTemoignage($bdd, $id, $statut) {
     try {
@@ -42,11 +28,9 @@ if (isset($_GET['id']) && isset($_GET['statut'])) {
     }
     exit;
 }
-?>
 
-<?php
 // Lecture des heures d'ouverture actuelles
-$horaires = json_decode(file_get_contents('horaires.json'), true);
+$horaires = json_decode(file_get_contents(__DIR__ . '/../resources/horaires.json'), true);
 
 // Traitement du formulaire
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_horaires'])) {
@@ -73,8 +57,6 @@ if (isset($_POST['ajouter_service'])) {
     }
 }
 
-// Chargement des services existants
-$services = json_decode(file_get_contents('services.json'), true);
 
 // Traitement de la suppression d'un service
 if (isset($_POST['supprimer_service'])) {

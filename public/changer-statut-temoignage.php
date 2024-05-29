@@ -1,5 +1,5 @@
 <?php
-require_once('connectdb.php'); // Connexion à la base de données
+require_once __DIR__ . '/../config/connectdb.php'; // Connexion à la base de données
 
 if (isset($_GET['id']) && isset($_GET['statut'])) {
     $id = $_GET['id'];
