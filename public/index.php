@@ -3,6 +3,23 @@ session_start();
 
 require_once __DIR__ . '/../config/connectdb.php';
 
+
+// Chemin vers le fichier JSON
+$jsonFile = __DIR__ . '/../public/resources/horaires.json';
+
+// Lire le fichier JSON
+if (file_exists($jsonFile)) {
+    $jsonData = file_get_contents($jsonFile);
+    $horaires = json_decode($jsonData, true);
+} else {
+    // Si le fichier n'existe pas, afficher des messages d'erreur
+    $horaires = [
+        'lundi_vendredi' => 'Horaires non disponibles',
+        'samedi' => 'Horaires non disponibles'
+    ];
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////
 // Déterminer la requête de l'URL
 $request = trim($_SERVER['REQUEST_URI'], '/');
 
@@ -34,7 +51,6 @@ switch ($request) {
         break;
 }
 
-$horaires = json_decode(file_get_contents(__DIR__ . '/../resources/horaires.json'), true);
 
 // Requête pour récupérer uniquement les témoignages approuvés
 $requeteTemoignages = $bdd->query('SELECT * FROM temoignages WHERE approuve = 1 ORDER BY id DESC');
@@ -126,8 +142,8 @@ $services = $requeteServices->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <div class="horaires">
             <h2>Heures d'ouverture</h2>
-            <p>Lundi - Vendredi : <?php echo $horaires['lundi_vendredi']; ?></p>
-            <p>Samedi : <?php echo $horaires['samedi']; ?></p>
+            <p>Lundi - Vendredi : <?php echo htmlspecialchars($horaires['lundi_vendredi']); ?></p>
+            <p>Samedi : <?php echo htmlspecialchars($horaires['samedi']); ?></p>
         </div>
     </div>
     <div>

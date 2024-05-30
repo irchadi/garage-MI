@@ -5,90 +5,121 @@ session_start();
 require_once __DIR__ . '/../config/connectdb.php';
 
 
-// Lecture des heures d'ouverture actuelles
-$horaires = json_decode(file_get_contents(__DIR__ . '/../resources/horaires.json'), true);
+// Chemin vers le fichier JSON
+$jsonFile = __DIR__ . '/../public/resources/horaires.json';
 
-// Traitement du formulaire
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_horaires'])) {
+// Lire le fichier JSON
+if (file_exists($jsonFile)) {
+    $jsonData = file_get_contents($jsonFile);
+    $horaires = json_decode($jsonData, true);
+} else {
+    // Si le fichier n'existe pas, initialiser avec des valeurs par défaut
     $horaires = [
-        'lundi_vendredi' => $_POST['lundi_vendredi'],
-        'samedi' => $_POST['samedi']
+        'lundi_vendredi' => '',
+        'samedi' => ''
     ];
-    file_put_contents('horaires.json', json_encode($horaires, JSON_PRETTY_PRINT));
-    echo "Les heures d'ouverture ont été mises à jour.";
-    header('Location: moncompte.php'); // Redirection pour éviter le rechargement du formulaire
-    exit;
 }
-if (isset($_POST['ajouter_service'])) {
-    $nouveauService = $_POST['nouveau_service'];
-    
-    // Lire les services existants
-    $services = json_decode(file_get_contents('services.json'), true);
-    if (!in_array($nouveauService, $services)) { // Éviter les doublons
-        $services[] = $nouveauService; // Ajouter le nouveau service
-        file_put_contents('services.json', json_encode($services, JSON_PRETTY_PRINT)); // Sauvegarder la liste mise à jour
-        echo "Service ajouté avec succès.";
+
+// Initialiser la variable pour les messages d'erreur ou de succès
+$message = "";
+
+// Traiter le formulaire de soumission
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_horaires'])) {
+    $lundi_vendredi = htmlspecialchars($_POST['lundi_vendredi']);
+    $samedi = htmlspecialchars($_POST['samedi']);
+
+    // Mettre à jour les heures d'ouverture dans le tableau
+    $horaires['lundi_vendredi'] = $lundi_vendredi;
+    $horaires['samedi'] = $samedi;
+
+    // Encoder le tableau en JSON et écrire dans le fichier
+    if (file_put_contents($jsonFile, json_encode($horaires, JSON_PRETTY_PRINT))) {
+        $message = "Les heures d'ouverture ont été mises à jour avec succès.";
     } else {
-        echo "Ce service existe déjà.";
+        $message = "Erreur lors de la mise à jour des heures d'ouverture.";
     }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////
+//SERVICES
+// Initialiser la variable pour les messages d'erreur ou de succès
+$message = "";
 
-// Traitement de la suppression d'un service
-if (isset($_POST['supprimer_service'])) {
-    $indexASupprimer = $_POST['index'];
-    if (isset($services[$indexASupprimer])) {
-        unset($services[$indexASupprimer]); // Supprime le service
-        $services = array_values($services); // Réindexe l'array
-        file_put_contents('services.json', json_encode($services, JSON_PRETTY_PRINT)); // Sauvegarde la nouvelle liste
-        echo "Service supprimé avec succès.";
-    }
-}
-
-// Ajouter un nouveau service
-if (isset($_POST['ajouter_service']) && !empty($_POST['nouveau_service'])) {
-    $nouveauService = [
-        "id" => count($services) + 1, // Attribution d'un nouvel ID
-        "nom" => $_POST['nouveau_service'],
-        "description" => $_POST['description_service'] // Assurez-vous d'ajouter un champ pour la description dans le formulaire
-    ];
-    $services[] = $nouveauService;
-    file_put_contents('services.json', json_encode($services, JSON_PRETTY_PRINT));
-    // Optionnel : Générer une page pour le service
-}
-
-// Supprimer un service
-if (isset($_POST['supprimer_service'])) {
-    $indexASupprimer = $_POST['index'];
-    array_splice($services, $indexASupprimer, 1); // Supprime le service de l'array
-    file_put_contents('services.json', json_encode($services, JSON_PRETTY_PRINT));
-}
-
-
-// Traitement de l'ajout de service
+// Traiter le formulaire d'ajout de service
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter_service'])) {
-    $nom = $_POST['nom'];
-    $description = $_POST['description'];
-    // Code pour télécharger l'image et obtenir son chemin
+    $nom = htmlspecialchars($_POST['nom']);
+    $description = htmlspecialchars($_POST['description']);
+    $image = $_FILES['image'];
 
-    // Insérer les données dans la base de données
-    $sql = "INSERT INTO services (nom, description, image) VALUES (:nom, :description, :image)";
-    $stmt = $bdd->prepare($sql);
-    $stmt->execute(array(
-        ':nom' => $nom,
-        ':description' => $description,
-        ':image' => $image // Assurez-vous de remplacer cette valeur par le chemin de l'image téléchargée
-    ));
+    // Vérifier et télécharger l'image
+    $target_dir = __DIR__ . '/../public/assets/img/';
+    $target_file = $target_dir . basename($image["name"]);
+    $uploadOk = 1;
+    $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+    // Vérifier si le fichier est une image
+    $check = getimagesize($image["tmp_name"]);
+    if ($check !== false) {
+        $uploadOk = 1;
+    } else {
+        $message = "Le fichier n'est pas une image.";
+        $uploadOk = 0;
+    }
+
+    // Vérifier si le fichier existe déjà
+    if (file_exists($target_file)) {
+        $message = "Désolé, le fichier existe déjà.";
+        $uploadOk = 0;
+    }
+
+    // Vérifier la taille du fichier
+    if ($image["size"] > 500000) {
+        $message = "Désolé, votre fichier est trop volumineux.";
+        $uploadOk = 0;
+    }
+
+    // Autoriser certains formats de fichier
+    if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
+        $message = "Désolé, seuls les fichiers JPG, JPEG, PNG et GIF sont autorisés.";
+        $uploadOk = 0;
+    }
+
+    // Vérifier si $uploadOk est défini à 0 par une erreur
+    if ($uploadOk == 0) {
+        $message .= " Votre fichier n'a pas été téléchargé.";
+    } else {
+        if (move_uploaded_file($image["tmp_name"], $target_file)) {
+            // Insérer le service dans la base de données
+            $sql = "INSERT INTO services (nom, description, image) VALUES (:nom, :description, :image)";
+            $stmt = $bdd->prepare($sql);
+            $stmt->execute([
+                ':nom' => $nom,
+                ':description' => $description,
+                ':image' => 'assets/img/' . basename($image["name"]) // Sauvegarder le chemin relatif de l'image
+            ]);
+            $message = "Le service a été ajouté avec succès.";
+        } else {
+            $message = "Désolé, une erreur s'est produite lors du téléchargement de votre fichier.";
+        }
+    }
 }
 
-// Traitement de la suppression de service
+// Traiter la suppression de service
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['supprimer_service'])) {
-    $id = $_POST['id'];
-    // Supprimer le service correspondant à l'ID donné de la base de données
+    $id = intval($_POST['supprimer_service']);
+    // Supprimer le service de la base de données
     $sql = "DELETE FROM services WHERE id = :id";
     $stmt = $bdd->prepare($sql);
-    $stmt->execute(array(':id' => $id));
+    $stmt->execute([':id' => $id]);
+    $message = "Le service a été supprimé avec succès.";
 }
+
+// Récupérer les services depuis la base de données
+$sql = "SELECT id, nom FROM services";
+$stmt = $bdd->query($sql);
+$services = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
 ?>
 
 <!DOCTYPE html>
@@ -234,7 +265,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['supprimer_service'])) 
 
 <div class="container">
         <h2>Ajouter un service</h2>
-        <form action="" method="post" enctype="multipart/form-data">
+        <?php if ($message) { echo "<p>$message</p>"; } ?>
+        <form action="moncompte.php" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="nom">Nom du service:</label>
                 <input type="text" class="form-control" id="nom" name="nom" required>
@@ -250,24 +282,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['supprimer_service'])) 
             <button type="submit" class="btn btn-primary" name="ajouter_service">Ajouter le service</button>
         </form>
         <hr>
-        <?php
-        // Récupérer les services depuis la base de données
-        $sql = "SELECT id, nom FROM services";
-        $stmt = $bdd->query($sql);
-        if ($stmt->rowCount() > 0) {
-            // Afficher les services dans un formulaire
-            echo '<form action="" method="post">';
-            while ($row = $stmt->fetch()) {
-                echo '<div class="form-group">';
-                echo '<label>' . htmlspecialchars($row['nom']) . '</label>';
-                echo '<button type="submit" class="btn btn-danger" name="supprimer_service" value="' . $row['id'] . '">Supprimer</button>';
-                echo '</div>';
-            }
-            echo '</form>';
-        } else {
-            echo '<p>Aucun service trouvé.</p>';
-        }
-        ?>
+        <h2>Services existants</h2>
+        <?php if (count($services) > 0): ?>
+            <form action="moncompte.php" method="post">
+                <?php foreach ($services as $service): ?>
+                    <div class="form-group">
+                        <label><?php echo htmlspecialchars($service['nom']); ?></label>
+                        <button type="submit" class="btn btn-danger" name="supprimer_service" value="<?php echo $service['id']; ?>">Supprimer</button>
+                    </div>
+                <?php endforeach; ?>
+            </form>
+        <?php else: ?>
+            <p>Aucun service trouvé.</p>
+        <?php endif; ?>
     </div>
 
 <div class="container">
@@ -346,17 +373,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['supprimer_service'])) 
 </div>
 <!-- Formulaire pour modifier les heures d'ouverture -->
 <div>
-    <h2>Modifier les heures d'ouverture</h2>
-    <form action="moncompte.php" method="post">
-        <label for="lundi_vendredi">Lundi - Vendredi :</label>
-        <input type="text" id="lundi_vendredi" name="lundi_vendredi" value="<?php echo $horaires['lundi_vendredi']; ?>" required>
-        <br>
-        <label for="samedi">Samedi :</label>
-        <input type="text" id="samedi" name="samedi" value="<?php echo $horaires['samedi']; ?>" required>
-        <br>
-        <button type="submit" name="save_horaires">Enregistrer les heures</button>
-    </form>
-</div>
+        <h2>Modifier les heures d'ouverture</h2>
+        <?php if ($message) { echo "<p>$message</p>"; } ?>
+        <form action="moncompte.php" method="post">
+            <label for="lundi_vendredi">Lundi - Vendredi :</label>
+            <input type="text" id="lundi_vendredi" name="lundi_vendredi" value="<?php echo htmlspecialchars($horaires['lundi_vendredi']); ?>" required>
+            <br>
+            <label for="samedi">Samedi :</label>
+            <input type="text" id="samedi" name="samedi" value="<?php echo htmlspecialchars($horaires['samedi']); ?>" required>
+            <br>
+            <button type="submit" name="save_horaires">Enregistrer les heures</button>
+        </form>
+    </div>
 <div class="container">
         <a href="logout.php">Se déconnecter</a>
 </div>
