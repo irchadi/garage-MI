@@ -21,6 +21,11 @@ if (isset($_GET['id'])) {
 } else {
     die('ID du véhicule non spécifié.');
 }
+
+// Récupérer les noms des services depuis la base de données
+$requeteServices = $bdd->query("SELECT id, nom FROM services");
+$services = $requeteServices->fetchAll(PDO::FETCH_ASSOC);
+
 ?>
 <!DOCTYPE html>
 <html lang="fr">

@@ -3,8 +3,8 @@
 require_once __DIR__ . '/../config/connectdb.php';
 
 // Récupérer les noms des services depuis la base de données
-$requete = $bdd->query("SELECT nom FROM services");
-$services = $requete->fetchAll(PDO::FETCH_ASSOC);
+$requeteServices = $bdd->query("SELECT id, nom FROM services");
+$services = $requeteServices->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>

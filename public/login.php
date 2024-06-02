@@ -53,6 +53,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connexion</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#contact-form input').on('input', function() {
+                var isValid = true;
+                $('#contact-form input').each(function() {
+                    if ($(this).val() === '') {
+                        isValid = false;
+                        return false; // Sortir de la boucle si un champ est vide
+                    }
+                });
+                if (isValid) {
+                    $('#submit-btn').prop('disabled', false);
+                } else {
+                    $('#submit-btn').prop('disabled', true);
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 <header>
