@@ -5,7 +5,7 @@ require_once __DIR__ . '/../config/connectdb.php';
 
 
 // Chemin vers le fichier JSON
-$jsonFile = __DIR__ . '/../public/resources/horaires.json';
+$jsonFile = __DIR__ . '/../resources/horaires.json';
 
 // Lire le fichier JSON
 if (file_exists($jsonFile)) {
@@ -195,7 +195,7 @@ $services = $requeteServices->fetchAll(PDO::FETCH_ASSOC);
     </form>
 </div>
 
-<footer class="bg-light p-3">
+<footer>
     <p class="text-center">Garage V. Parrot est votre partenaire de confiance pour l'entretien, la réparation, et la vente de véhicules d'occasion à Toulouse.</p>
 </footer>
     </main>
