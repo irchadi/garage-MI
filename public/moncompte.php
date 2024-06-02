@@ -1,47 +1,26 @@
 <?php
-// Inclure le fichier de connexion
-session_start();
 
 require_once __DIR__ . '/../config/connectdb.php';
 
-
-// Chemin vers le fichier JSON
-$jsonFile = __DIR__ . '/../public/resources/horaires.json';
-
-// Lire le fichier JSON
-if (file_exists($jsonFile)) {
-    $jsonData = file_get_contents($jsonFile);
-    $horaires = json_decode($jsonData, true);
-} else {
-    // Si le fichier n'existe pas, initialiser avec des valeurs par défaut
-    $horaires = [
-        'lundi_vendredi' => '',
-        'samedi' => ''
-    ];
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'admin') {
+    header('Location: login.php');
+    exit();
 }
 
-// Initialiser la variable pour les messages d'erreur ou de succès
-$message = "";
 
-// Traiter le formulaire de soumission
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_horaires'])) {
-    $lundi_vendredi = htmlspecialchars($_POST['lundi_vendredi']);
-    $samedi = htmlspecialchars($_POST['samedi']);
-
-    // Mettre à jour les heures d'ouverture dans le tableau
-    $horaires['lundi_vendredi'] = $lundi_vendredi;
-    $horaires['samedi'] = $samedi;
-
-    // Encoder le tableau en JSON et écrire dans le fichier
-    if (file_put_contents($jsonFile, json_encode($horaires, JSON_PRETTY_PRINT))) {
-        $message = "Les heures d'ouverture ont été mises à jour avec succès.";
-    } else {
-        $message = "Erreur lors de la mise à jour des heures d'ouverture.";
-    }
+// Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////
-//SERVICES
+// Vérifier le type d'utilisateur pour accéder à cette page
+if ($_SESSION['user_type'] !== 'admin') {
+    header('Location: unauthorized.php');
+    exit;
+}
+
 // Initialiser la variable pour les messages d'erreur ou de succès
 $message = "";
 
@@ -114,12 +93,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['supprimer_service'])) 
     $message = "Le service a été supprimé avec succès.";
 }
 
+// Traiter le formulaire d'ajout d'utilisateur
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['ajouter_utilisateur'])) {
+    $username = htmlspecialchars($_POST['username']);
+    $password = htmlspecialchars($_POST['password']);
+    $user_type = htmlspecialchars($_POST['user_type']);
+
+    // Hacher le mot de passe
+    $hashed_password = password_hash($password, PASSWORD_BCRYPT);
+
+    // Insérer l'utilisateur dans la base de données
+    $sql = "INSERT INTO users (username, password, user_type) VALUES (:username, :password, :user_type)";
+    $stmt = $bdd->prepare($sql);
+    $stmt->execute([
+        ':username' => $username,
+        ':password' => $hashed_password,
+        ':user_type' => $user_type
+    ]);
+
+    $message = "Utilisateur ajouté avec succès.";
+}
+
 // Récupérer les services depuis la base de données
 $sql = "SELECT id, nom FROM services";
 $stmt = $bdd->query($sql);
 $services = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
 ?>
 
 <!DOCTYPE html>
@@ -151,42 +149,45 @@ $services = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </script>
 </head>
 <body>
-    <header>
+<header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="index.php">GVP</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+        <a class="navbar-brand" href="index.php">GVP</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Nos services
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nos services</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <?php foreach ($services as $service): ?>
+                            <a class="dropdown-item" href="service-detail.php?id=<?php echo $service['id']; ?>">
+                            <?php echo htmlspecialchars($service['nom']); ?>
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Réparation</a>
-                            <a class="dropdown-item" href="#">Contrôle technique</a>
-                            <a class="dropdown-item" href="#">Entretien</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?php endforeach; ?>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Vehicules en vente
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="vehicules.php">Vehicules d'occasion</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="nous.php">Qui sommes-nous ?</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="moncompte.php">Administrateur</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="nous.php">Qui sommes-nous ?</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="moncompteemploye.php">Employé</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="moncompte.php">Administrateur</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
 
     <body>
     <main class="container">
@@ -233,35 +234,27 @@ $services = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </form>
 </div>
 
-<div class="container">
+<div>
     <h2>Ajouter un utilisateur</h2>
-    <form action="traitement-ajouter-utilisateur.php" method="post">
-        <div class="form-group">
-            <label for="nom">Nom:</label>
-            <input type="text" class="form-control" id="nom" name="nom" required>
-        </div>
-        <div class="form-group">
-            <label for="prenom">Prénom:</label>
-            <input type="text" class="form-control" id="prenom" name="prenom" required>
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" class="form-control" id="email" name="email" required>
-        </div>
-        <div class="form-group">
-            <label for="mot_de_passe">Mot de passe:</label>
-            <input type="password" class="form-control" id="mot_de_passe" name="mot_de_passe" required>
-        </div>
-        <div class="form-group">
-            <label for="type">Type d'utilisateur:</label>
-            <select class="form-control" id="type" name="type">
-                <option value="admin">Admin</option>
-                <option value="employe">Employé</option>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-primary">Ajouter</button>
-    </form>
-</div>
+        <form action="moncompte.php" method="post">
+            <div class="form-group">
+                <label for="username">Nom d'utilisateur:</label>
+                <input type="text" class="form-control" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="user_type">Type d'utilisateur:</label>
+                <select class="form-control" id="user_type" name="user_type" required>
+                    <option value="admin">Admin</option>
+                    <option value="employe">Employé</option>
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary" name="ajouter_utilisateur">Ajouter l'utilisateur</button>
+        </form>
+    </div>
 
 <div class="container">
         <h2>Ajouter un service</h2>

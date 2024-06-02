@@ -1,9 +1,26 @@
 <?php
-session_start();
 // Inclure le fichier de connexion
 require_once __DIR__ . '/../config/connectdb.php';
 
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['user_type'] !== 'employe') {
+    header('Location: login.php');
+    exit();
+}
 
+
+//VERIFICATION CONNEXION EMPLOYE
+// Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
+if (!isset($_SESSION['user_id'])) {
+    header('Location: login.php');
+    exit;
+}
+
+// Vérifier le type d'utilisateur pour accéder à cette page
+if ($_SESSION['user_type'] !== 'employe') {
+    header('Location: unauthorized.php'); // Créez une page unauthorized.php pour afficher un message d'accès refusé
+    exit;
+}
 
 function changerStatutTemoignage($bdd, $id, $statut) {
     try {
@@ -27,34 +44,6 @@ if (isset($_GET['id']) && isset($_GET['statut'])) {
         header("Location: moncompte.php");
     }
     exit;
-}
-
-// Lecture des heures d'ouverture actuelles
-$horaires = json_decode(file_get_contents(__DIR__ . '/../resources/horaires.json'), true);
-
-// Traitement du formulaire
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['save_horaires'])) {
-    $horaires = [
-        'lundi_vendredi' => $_POST['lundi_vendredi'],
-        'samedi' => $_POST['samedi']
-    ];
-    file_put_contents('horaires.json', json_encode($horaires, JSON_PRETTY_PRINT));
-    echo "Les heures d'ouverture ont été mises à jour.";
-    header('Location: moncompte.php'); // Redirection pour éviter le rechargement du formulaire
-    exit;
-}
-if (isset($_POST['ajouter_service'])) {
-    $nouveauService = $_POST['nouveau_service'];
-    
-    // Lire les services existants
-    $services = json_decode(file_get_contents('services.json'), true);
-    if (!in_array($nouveauService, $services)) { // Éviter les doublons
-        $services[] = $nouveauService; // Ajouter le nouveau service
-        file_put_contents('services.json', json_encode($services, JSON_PRETTY_PRINT)); // Sauvegarder la liste mise à jour
-        echo "Service ajouté avec succès.";
-    } else {
-        echo "Ce service existe déjà.";
-    }
 }
 
 
@@ -100,42 +89,45 @@ if (isset($_POST['supprimer_service'])) {
     </script>
 </head>
 <body>
-    <header>
+<header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="index.php">GVP</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+        <a class="navbar-brand" href="index.php">GVP</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Nos services
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nos services</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <?php foreach ($services as $service): ?>
+                            <a class="dropdown-item" href="service-detail.php?id=<?php echo $service['id']; ?>">
+                            <?php echo htmlspecialchars($service['nom']); ?>
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Réparation</a>
-                            <a class="dropdown-item" href="#">Contrôle technique</a>
-                            <a class="dropdown-item" href="#">Entretien</a>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?php endforeach; ?>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Vehicules en vente
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="vehicules.php">Vehicules d'occasion</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="nous.php">Qui sommes-nous ?</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="moncompteemploye.php">Employé</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="nous.php">Qui sommes-nous ?</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="moncompteemploye.php">Employé</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="moncompte.php">Administrateur</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+</header>
 
     <body>
     <main class="container">

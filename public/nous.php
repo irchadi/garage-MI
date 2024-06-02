@@ -37,43 +37,43 @@ $services = $requete->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="index.php">GVP</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.php">GVP</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Nos services
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Nos services</a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <?php foreach ($services as $service): ?>
+                            <a class="dropdown-item" href="service-detail.php?id=<?php echo $service['id']; ?>">
+                            <?php echo htmlspecialchars($service['nom']); ?>
                         </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <?php foreach ($services as $service): ?>
-                            <a class="dropdown-item" href="#"><?php echo htmlspecialchars($service['nom']); ?></a>
-                            <?php endforeach; ?>
-                        </div>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <?php endforeach; ?>
+                    </div>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             Vehicules en vente
-                        </a>
-                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="vehicules.php">Vehicules d'occasion</a>
-                        </div>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="nous.php">Qui sommes-nous ?</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="moncompteemploye.php">Employé</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="moncompte.php">Administrateur</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="nous.php">Qui sommes-nous ?</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="moncompteemploye.php">Employé</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="moncompte.php">Administrateur</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
 </header>
 
 <main>
