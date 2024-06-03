@@ -90,7 +90,7 @@ $services = $requeteServices->fetchAll(PDO::FETCH_ASSOC);
     </section>
 </main>
 
-<footer>
+<footer class="fixed-bottom">
     <p class="text-center">Garage V. Parrot est votre partenaire de confiance pour l'entretien, la réparation, et la vente de véhicules d'occasion à Toulouse.</p>
 </footer>
 
