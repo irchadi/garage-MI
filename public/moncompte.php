@@ -25,8 +25,8 @@ if (file_exists($jsonFile)) {
 } else {
     // Si le fichier n'existe pas, initialiser avec des valeurs par défaut
     $horaires = [
-        'lundi_vendredi' => '',
-        'samedi' => ''
+        'lundi_vendredi' => 'Horaires non disponibles',
+        'samedi' => 'Horaires non disponibles'
     ];
 }
 
@@ -385,7 +385,6 @@ $services = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="mb-4">
     <h2>Modifier les heures d'ouverture</h2>
-        <?php if ($message) { echo "<p>$message</p>"; } ?>
         <form action="moncompte.php" method="post">
             <div class="form-group">
                 <label for="lundi_vendredi">Lundi - Vendredi :</label>
