@@ -1,6 +1,6 @@
 <?php
 // Connexion à la base de données
-require_once __DIR__ . '/../config/connectdb.php'
+require_once __DIR__ . '/../config/connectdb.php';
 
 // Vérification de l'existence de l'ID du véhicule dans l'URL
 if (isset($_GET['id'])) {
