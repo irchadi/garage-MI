@@ -1,10 +1,6 @@
 <?php
 // Connexion à la base de données
-try {
-    $bdd = new PDO('mysql:host=127.0.0.1;dbname=garage_v_parrot', 'root', '');
-} catch (Exception $e) {
-    die('Erreur : ' . $e->getMessage());
-}
+require_once __DIR__ . '/../config/connectdb.php'
 
 // Vérification de l'existence de l'ID du véhicule dans l'URL
 if (isset($_GET['id'])) {
