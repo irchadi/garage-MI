@@ -2,8 +2,11 @@
 // Connexion à la base de données
 try {
     $bdd = new PDO('mysql:host=127.0.0.1;dbname=garage_v_parrot', 'root', '');
+    $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch (Exception $e) {
-    die('Erreur : ' . $e->getMessage());
+    // Log the error message and display a generic error message to the user
+    error_log($e->getMessage());
+    die('Erreur : Impossible de se connecter à la base de données.');
 }
 ?>
 
